@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Text-to-Speech Demo</title>
+   
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>Enhanced Text-to-Speech</h1>
+        <input id="input" type="text" placeholder="Type something to speak">
+        <br>
+        <label for="voiceSelect">Choose Voice:</label>
+        <select id="voiceSelect"></select>
+        <br>
+        <label for="rate">Rate:</label>
+        <input type="range" id="rate" min="0.1" max="2" value="1" step="0.1">
+        <span id="rateValue">1</span>
+        <br>
+        <label for="volume">Volume:</label>
+        <input type="range" id="volume" min="0" max="1" value="1" step="0.1">
+        <span id="volumeValue">1</span>
+        <br>
+        <button onclick="speak()">Speak</button>
+    </div>
+
+    <script>
+        history.pushState(null, '', 'Text-to-Speech/home');
+
+    </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <script>
+        var synth = window.speechSynthesis;
+        var voiceSelect = document.getElementById('voiceSelect');
+        var rate = document.getElementById('rate');
+        var rateValue = document.getElementById('rateValue');
+        var volume = document.getElementById('volume');
+        var volumeValue = document.getElementById('volumeValue');
+
+        function populateVoiceList() {
+            var voices = synth.getVoices();
+            voiceSelect.innerHTML = '';
+            for (var i = 0; i < voices.length; i++) {
+                var option = document.createElement('option');
+                option.textContent = voices[i].name + ' (' + voices[i].lang + ')';
+                option.setAttribute('data-lang', voices[i].lang);
+                option.setAttribute('data-name', voices[i].name);
+                voiceSelect.appendChild(option);
+            }
+        }
+
+        populateVoiceList();
+        if (speechSynthesis.onvoiceschanged !== undefined) {
+            speechSynthesis.onvoiceschanged = populateVoiceList;
+        }
+
+        function speak() {
+            var text = document.getElementById('input').value;
+            if (text !== '') {
+                var utterance = new SpeechSynthesisUtterance(text);
+                var selectedOption = voiceSelect.selectedOptions[0].getAttribute('data-name');
+                var voices = synth.getVoices();
+                for (var i = 0; i < voices.length; i++) {
+                    if (voices[i].name === selectedOption) {
+                        utterance.voice = voices[i];
+                        break;
+                    }
+                }
+                utterance.rate = rate.value;
+                utterance.volume = volume.value;
+                synth.speak(utterance);
+            }
+        }
+
+        rate.oninput = function() {
+            rateValue.textContent = rate.value;
+        }
+
+        volume.oninput = function() {
+            volumeValue.textContent = volume.value;
+        }
+    </script>
+     <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        input, select, button {
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #28a745;
+            color: #fff;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+    </style>
+</body>
+</html>
